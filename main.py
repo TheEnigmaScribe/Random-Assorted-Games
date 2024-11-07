@@ -1,8 +1,3 @@
-# KidsCanCode - Game Development with Pygame video series
-# Jumpy! (a platform game) - Part 1
-# Video link: https://www.youtube.com/watch?v=uWvb3QzA48c
-# Project setup
-
 import pygame as pg
 import sys
 import json
@@ -36,19 +31,20 @@ class Game:
         for row, tiles in enumerate(self.tilemap_data):
             for col, tile in enumerate(tiles):
                 if tile == 'P':
+                    print("playerspawned")
                     self.player = Player(self, col, row, pdir=2)
                 if tile == '#':
                     Wall(self, col, row)
                 if tile == 'T':
                     Target(self, col, row)
                 if tile == 'L':
-                    Enemy(self, col, row, playerx=-1, playery=-1, edir=1)
+                    Enemy(self, col, row, edir=1)
                 if tile == 'R':
-                    Enemy(self, col, row, playerx=-1, playery=-1, edir=3)
+                    Enemy(self, col, row, edir=3)
                 if tile == 'U':
-                    Enemy(self, col, row, playerx=-1, playery=-1, edir=2)
+                    Enemy(self, col, row, edir=2)
                 if tile == 'D':
-                    Enemy(self, col, row, playerx=-1, playery=-1, edir=4)
+                    Enemy(self, col, row, edir=4)
         
 
     def run(self):
