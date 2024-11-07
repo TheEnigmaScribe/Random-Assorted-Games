@@ -12,21 +12,18 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
+        Player.x = self.x
+        Player.y = self.y
         self.pdir = pdir
-        xval = str(x)
-        yval = str(y)
-        print(xval +", " + yval)
 
     def move(self, dx=0, dy=0):
         if not self.collide_with_walls(dx, dy) and not self.collide_with_enemy(dx, dy):
             self.x += dx
             self.y += dy
-            playerx = x
-            playery = y
-            if dx or dy != 0:
-                xval = str(self.x)
-                yval = str(self.y)
-                print(xval + ", " + yval)
+            #if dx or dy != 0:
+                #xval = str(self.x)
+                #yval = str(self.y)
+                #print(xval + ", " + yval)
             if dx < 0:
                 dirstr = "LEFT"
             if dx > 0:
@@ -55,6 +52,9 @@ class Player(pg.sprite.Sprite):
         self.rect.x = self.x * TILESIZE
         self.rect.y = self.y * TILESIZE
 
+    def location(x, y):
+        return (x, y)
+
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.walls
@@ -69,28 +69,28 @@ class Wall(pg.sprite.Sprite):
         self.rect.y = y * TILESIZE
 
 class Enemy(pg.sprite.Sprite):
-    def __init__(self, game, x, y, playerx, playery, edir):
+    def __init__(self, game, x, y, edir):
         self.groups = game.all_sprites, game.enemy
         pg.sprite.Sprite.__init__(self, self.groups)
         img_dir = path.join(path.dirname(__file__), 'Sprites')
         self.game = game
-        if edir == 1:
+        self.edir = edir
+        if self.edir == 1:
             eleft = pg.image.load(path.join(img_dir, "EnemyLeft.png")).convert()
             self.eleft = eleft
             self.image = pg.transform.scale(eleft, (TILESIZE, TILESIZE))
-        if edir == 2:
+        if self.edir == 2:
             eup = pg.image.load(path.join(img_dir, "EnemyUp.png")).convert()
             self.eup = eup
             self.image = pg.transform.scale(eup, (TILESIZE, TILESIZE))
-        if edir == 3:
+        if self.edir == 3:
             eright = pg.image.load(path.join(img_dir, "EnemyRight.png")).convert()
             self.eright = eright
             self.image = pg.transform.scale(eright, (TILESIZE, TILESIZE))
-        if edir == 4:
+        if self.edir == 4:
             edown = pg.image.load(path.join(img_dir, "EnemyDown.png")).convert()
             self.edown = edown
             self.image = pg.transform.scale(edown, (TILESIZE, TILESIZE))
-        print(str(edir))
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
@@ -98,22 +98,24 @@ class Enemy(pg.sprite.Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
 
-    def update(self, playerx, playery):
-        if (playerx <= self.x) and (playery == self.y) and edir == 1:
-            self.image.fill(WHITE)
-        if (playerx >= self.x) and (playery == self.y) and edir == 3:
-            self.image.fill(WHITE)
-        if (playery <= self.y) and (playerx == self.x) and edir == 2:
-            self.image.fill(WHITE)
-        if (playery >= self.y) and (playerx == self.x) and edir == 4:
-            self.image.fill(WHITE)
+    def update(self):
+        Player.location(Player.x, Player.y)
+        print(str(Player.x) + ", " + str(Player.y))
+        if (Player.x <= self.x) and (Player.y == self.y) and self.edir == 1:
+            print("playerseen")
+        if (Player.x >= self.x) and (Player.y == self.y) and self.edir == 3:
+            print("playerseen")
+        if (Player.y <= self.y) and (Player.x == self.x) and self.edir == 2:
+            print("playerseen")
+        if (Player.y >= self.y) and (Player.x == self.x) and self.edir == 4:
+            print("playerseen")
         # add shooting functionality later
 
     def shoot(self):
         bullet = Bullet(x, y, edir)
 
     def death(self):
-        if (game.player.x + dx == self.x) and (game.player.y + dy == self.y):
+        if (player.locationx + dx == self.x) and (player.locationy + dy == self.y):
             self.kill()
             
 class Bullet(pg.sprite.Sprite):
