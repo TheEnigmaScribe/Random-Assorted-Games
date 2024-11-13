@@ -28,6 +28,7 @@ class Game:
         self.walls = pg.sprite.Group()
         self.enemy = pg.sprite.Group()
         self.target = pg.sprite.Group()
+        self.bullets = pg.sprite.Group()
         for row, tiles in enumerate(self.tilemap_data):
             for col, tile in enumerate(tiles):
                 if tile == 'P':
@@ -81,12 +82,27 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_LEFT:
                     self.player.move(dx=-1)
+                    quickcheck = 1
                 if event.key == pg.K_RIGHT:
                     self.player.move(dx=1)
+                    quickcheck = 1
                 if event.key == pg.K_UP:
                     self.player.move(dy=-1)
+                    quickcheck = 1
                 if event.key == pg.K_DOWN:
                     self.player.move(dy=1)
+                    quickcheck = 1
+                if quickcheck == 1:
+                    self.enemysightcheck()
+                    quickcheck = 0
+
+    def enemysightcheck(self):
+        for enemy in self.enemy:
+            print("working")
+            if Enemy.seeplayer == True:
+                print("gameknows")
+            if Enemy.seeplayer == True and self.bullets == None:
+                bullet = Bullet(self, Enemy.xcoord, Enemy.ycoord, Enemy.direction)
 
 
     def show_start_screen(self):
